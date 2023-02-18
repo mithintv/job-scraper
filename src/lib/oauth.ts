@@ -20,7 +20,30 @@ export const getAuth = async () => {
   return auth.token;
 };
 
-export const getSheet = async (spreadsheetId: string) => {};
+export const getSheet = async (token: string, spreadsheetId: string) => {
+  let init = {
+    method: "GET",
+    async: true,
+    headers: {
+      Authorization: "Bearer " + token,
+      "Content-Type": "application/json",
+    },
+    contentType: "json",
+  };
+  const response = fetch(
+    `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}`,
+    init
+  )
+    .then((response) => response.json())
+    .then(function (data) {
+      console.log(data);
+      return data;
+    })
+    .catch((error) => {
+      return error;
+    });
+  return response;
+};
 
 export const insertRow = async (
   token: string,

@@ -11,41 +11,46 @@ const sheetId = parseInt(process.env.REACT_APP_SHEET_ID!);
 const sheetTitle = process.env.REACT_APP_SPREADSHEET_NAME!;
 
 function App() {
+  const [url, setUrl] = useState<string>("");
   const [data, setData] = useState<DataObj>({
     date: "",
     title: "",
     company: "",
     location: "",
+    salary: "",
     description: "",
+    platform: "",
   });
 
-  const getData = async () => {
+  const getOtta = async () => {
     const [tab] = await chrome.tabs.query({
       active: true,
     });
+    console.log("sending message");
     const response = await chrome.tabs.sendMessage(tab.id!, {
       data: "getData",
     });
     setData(response);
     console.log(response);
-    const values = [
-      [
-        response.date,
-        response.title,
-        response.company,
-        response.location,
-        response.description,
-      ],
-    ];
+    // const values = [
+    //   [
+    //     response.date,
+    //     response.title,
+    //     response.company,
+    //     response.location,
+    //     response.description,
+    //   ],
+    // ];
     const token = await getAuth();
-    const { updatedSpreadsheet } = await insertRow(
-      token!,
-      spreadsheetId,
-      sheetId
-    );
-    if (updatedSpreadsheet.spreadsheetId === spreadsheetId) {
-      await insertData(token!, spreadsheetId, sheetTitle, values);
-    }
+    console.log(token);
+    // const { updatedSpreadsheet } = await insertRow(
+    //   token!,
+    //   spreadsheetId,
+    //   sheetId
+    // );
+    // if (updatedSpreadsheet.spreadsheetId === spreadsheetId) {
+    //   await insertData(token!, spreadsheetId, sheetTitle, values);
+    // }
     // save data
     // authorize()
     //   .then((auth) => appendValues(auth, response))
@@ -53,6 +58,25 @@ function App() {
 
     // // do something with response here, not outside the function
   };
+
+  useEffect(() => {
+    chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+      setUrl(tab.url!);
+    });
+
+    chrome.runtime.onMessage.addListener(function (
+      request,
+      sender,
+      sendResponse
+    ) {
+      console.log(
+        sender.tab
+          ? "from a content script:" + sender.tab.url
+          : "from the extension"
+      );
+      console.log(request);
+    });
+  });
 
   // useEffect(() => {
   //   const queryInfo = { active: true, lastFocusedWindow: true };
@@ -62,7 +86,7 @@ function App() {
   //       const url = tabs[0].url;
   //       setUrl(url!);
   //     });
-  // }, []);
+  // }, [url]);
 
   return (
     <div className="App">
@@ -73,7 +97,7 @@ function App() {
         <p>{data.company}</p>
         <p>{data.location}</p>
         <p>{data.description}</p>
-        <button onClick={getData}>Get Data</button>
+        <button onClick={getOtta}>Get Data</button>
       </header>
     </div>
   );

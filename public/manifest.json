@@ -27,7 +27,16 @@
   },
   "content_scripts": [
     {
-      "js": ["scripts/content.js"],
+      "js": ["scripts/indeed.js"],
+      "matches": ["https://www.indeed.com/jobs/?*"]
+    },
+    {
+      "js": ["scripts/otta.js"],
+      "matches": ["https://app.otta.com/jobs*"],
+      "run_at": "document_end"
+    },
+    {
+      "js": ["scripts/linkedin.js"],
       "matches": ["https://www.linkedin.com/jobs/*"]
     }
   ]
