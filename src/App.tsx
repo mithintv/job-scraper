@@ -98,7 +98,7 @@ function App() {
         <p>{data.company}</p>
         <p>{data.location}</p>
         <p>{data.salary}</p>
-        <a href={data.description}>Description</a>
+        {data.description !== "" && <a href={data.description}>Description</a>}
         <p>{data.platform}</p>
         <button onClick={getOtta}>Get Data</button>
       </header>
