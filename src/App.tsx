@@ -30,28 +30,34 @@ function App() {
     const response = await chrome.tabs.sendMessage(tab.id!, {
       data: "getData",
     });
-    setData(response);
-    console.log(response);
-    const values = [
-      [
-        response.date,
-        response.title,
-        response.company,
-        response.location,
-        response.salary,
-        response.description,
-        response.platform,
-      ],
-    ];
-    const token = await getAuth();
-    const { updatedSpreadsheet } = await insertRow(
-      token!,
-      spreadsheetId,
-      sheetId
-    );
-    if (updatedSpreadsheet.spreadsheetId === spreadsheetId) {
-      await insertData(token!, spreadsheetId, sheetTitle, values);
+
+    if (response) {
+      setData(response);
+      console.log(response);
+      const values = [
+        [
+          response.date,
+          response.title,
+          response.company,
+          response.location,
+          response.salary,
+          response.description,
+          response.platform,
+        ],
+      ];
+      const token = await getAuth();
+      const { updatedSpreadsheet } = await insertRow(
+        token!,
+        spreadsheetId,
+        sheetId
+      );
+      if (updatedSpreadsheet.spreadsheetId === spreadsheetId) {
+        await insertData(token!, spreadsheetId, sheetTitle, values);
+      }
+    } else {
+      console.log("Something went wrong");
     }
+
     // save data
     // authorize()
     //   .then((auth) => appendValues(auth, response))

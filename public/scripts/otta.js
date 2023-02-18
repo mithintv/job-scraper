@@ -1,18 +1,33 @@
 const getTitleAndCompany = () => {
   const fullTitle = document.getElementsByClassName("kShVjO")[0].textContent;
   const separator = fullTitle.indexOf(',');
-  return {
+  const titleAndCompany = {
     title: fullTitle.slice(0, separator),
     company: fullTitle.slice(separator + 2)
   };
+  console.log(titleAndCompany.title, titleAndCompany.company);
+  return titleAndCompany;
+};
+
+const getLocation = () => {
+  const location = document.getElementsByClassName("sc-hgZZql")[0].textContent;
+  console.log(location);
+  return location;
+};
+
+const getSalary = () => {
+  const salaryBlock = document.getElementsByClassName("sc-hZgfyJ");
+  const salary = salaryBlock.length !== 0 ? salaryBlock[0].textContent : "N/A";
+  console.log(salary);
+  return salary;
 };
 
 const getLink = () => {
-  const HTMLCollection = document.getElementsByClassName("sc-fbPSWO");
-  const index = HTMLCollection.length;
-  return document.getElementsByClassName("sc-fbPSWO")[index - 1].href;
+  const linkCollection = document.getElementsByClassName("sc-fbPSWO");
+  const index = linkCollection.length;
+  console.log(linkCollection[index - 1].href);
+  return linkCollection[index - 1].href;
 };
-
 
 window.addEventListener("load", () => {
   setTimeout(() => {
@@ -52,8 +67,8 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
       date: new Date().toLocaleString('en-US'),
       title: getTitleAndCompany().title,
       company: getTitleAndCompany().company,
-      location: document.getElementsByClassName("sc-hgZZql")[0].textContent,
-      salary: document.getElementsByClassName("sc-hZgfyJ")[0].textContent || "N/A",
+      location: getLocation(),
+      salary: getSalary(),
       description: getLink(),
       platform: 'Otta'
     });
