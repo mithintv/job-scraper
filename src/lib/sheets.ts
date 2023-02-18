@@ -15,7 +15,7 @@ const body = {
 export const getAuth = async () => {
   const auth = await chrome.identity.getAuthToken({ interactive: true });
   // @ts-ignore: Unreachable code error
-  console.log(auth.token!);
+  // console.log(auth.token!);
   // @ts-ignore: Unreachable code error
   return auth.token;
 };
@@ -65,8 +65,8 @@ export const insertRow = async (
             range: {
               sheetId: sheetId,
               dimension: "ROWS",
-              startIndex: 1,
-              endIndex: 2,
+              startIndex: 4,
+              endIndex: 5,
             },
           },
         },
@@ -104,13 +104,13 @@ export const insertData = (
     },
     contentType: "json",
     body: JSON.stringify({
-      range: `'${sheetTitle}'!A2:F`,
+      range: `'${sheetTitle}'!A5:G`,
       majorDimension: "ROWS",
       values,
     }),
   };
   const response = fetch(
-    `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/'${sheetTitle}'!A2:F?valueInputOption=USER_ENTERED`,
+    `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/'${sheetTitle}'!A5:G?valueInputOption=USER_ENTERED`,
     init
   )
     .then((response) => response.json())

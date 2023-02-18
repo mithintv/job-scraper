@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import logo from "./logo.svg";
 import "./App.css";
 
-import { insertRow, insertData, getAuth } from "./lib/oauth";
+import { insertRow, insertData, getAuth } from "./lib/sheets";
 import { DataObj } from "./lib/types";
 // import { authorize, appendValues } from "./lib/auth";
 
@@ -32,25 +32,26 @@ function App() {
     });
     setData(response);
     console.log(response);
-    // const values = [
-    //   [
-    //     response.date,
-    //     response.title,
-    //     response.company,
-    //     response.location,
-    //     response.description,
-    //   ],
-    // ];
+    const values = [
+      [
+        response.date,
+        response.title,
+        response.company,
+        response.location,
+        response.salary,
+        response.description,
+        response.platform,
+      ],
+    ];
     const token = await getAuth();
-    console.log(token);
-    // const { updatedSpreadsheet } = await insertRow(
-    //   token!,
-    //   spreadsheetId,
-    //   sheetId
-    // );
-    // if (updatedSpreadsheet.spreadsheetId === spreadsheetId) {
-    //   await insertData(token!, spreadsheetId, sheetTitle, values);
-    // }
+    const { updatedSpreadsheet } = await insertRow(
+      token!,
+      spreadsheetId,
+      sheetId
+    );
+    if (updatedSpreadsheet.spreadsheetId === spreadsheetId) {
+      await insertData(token!, spreadsheetId, sheetTitle, values);
+    }
     // save data
     // authorize()
     //   .then((auth) => appendValues(auth, response))
@@ -96,7 +97,9 @@ function App() {
         <p>{data.title}</p>
         <p>{data.company}</p>
         <p>{data.location}</p>
-        <p>{data.description}</p>
+        <p>{data.salary}</p>
+        <a href={data.description}>Description</a>
+        <p>{data.platform}</p>
         <button onClick={getOtta}>Get Data</button>
       </header>
     </div>
