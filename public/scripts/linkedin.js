@@ -25,6 +25,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
       company: getCompany(),
       location: getLocation(),
       description: getLink(),
+      platform: "Linkedin"
     });
 
 });
