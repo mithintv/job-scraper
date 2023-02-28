@@ -27,6 +27,10 @@
   },
   "content_scripts": [
     {
+      "js": ["scripts/flohiring.js"],
+      "matches": ["https://flohiring.com/#/job/*"]
+    },
+    {
       "js": ["scripts/indeed.js"],
       "matches": ["https://www.indeed.com/jobs/?*"]
     },

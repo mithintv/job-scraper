@@ -25,8 +25,10 @@ function App() {
   const getOtta = async () => {
     const [tab] = await chrome.tabs.query({
       active: true,
+      lastFocusedWindow: true,
     });
     console.log("sending message");
+    chrome.runtime.lastError;
     const response = await chrome.tabs.sendMessage(tab.id!, {
       data: "getData",
     });
