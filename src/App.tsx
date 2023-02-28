@@ -68,6 +68,19 @@ function App() {
     // // do something with response here, not outside the function
   };
 
+  const getProfile = async () => {
+    const [tab] = await chrome.tabs.query({
+      active: true,
+      lastFocusedWindow: true,
+    });
+    console.log("sending message");
+    chrome.runtime.lastError;
+    const response = await chrome.tabs.sendMessage(tab.id!, {
+      data: "getProfile",
+    });
+    console.log(response);
+  };
+
   useEffect(() => {
     chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
       setUrl(tab.url!);
@@ -109,6 +122,7 @@ function App() {
         {data.description !== "" && <a href={data.description}>Description</a>}
         <p>{data.platform}</p>
         <button onClick={getOtta}>Get Data</button>
+        <button onClick={getProfile}>Get Profile</button>
       </header>
     </div>
   );
