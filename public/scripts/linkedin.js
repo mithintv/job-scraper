@@ -1,26 +1,48 @@
 const getTitle = () => {
-  return document.getElementsByClassName("jobs-unified-top-card__job-title")[0]
-    .textContent;
+  return (
+    document.getElementsByClassName("jobs-unified-top-card__job-title")[0]
+      .textContent || document.querySelector("h1").textContent
+  );
 };
 
 const getCompany = () => {
-  return document
-    .getElementsByClassName("jobs-unified-top-card__company-name")[0]
-    .textContent.replaceAll("\\n")
-    .trim();
+  return (
+    document
+      .getElementsByClassName("jobs-unified-top-card__company-name")[0]
+      .textContent.replaceAll("\\n")
+      .trim() ||
+    document
+      .querySelector("h1")
+      .nextElementSibling.children[0].children[0].textContent.replaceAll(
+        "\n",
+        ""
+      )
+      .trim()
+  );
 };
 
 const getLocation = () => {
-  return document
-    .getElementsByClassName("jobs-unified-top-card__bullet")[0]
-    .textContent.replaceAll("\\n")
-    .trim();
+  return (
+    document
+      .getElementsByClassName("jobs-unified-top-card__bullet")[0]
+      .textContent.replaceAll("\\n")
+      .trim() ||
+    document
+      .querySelector("h1")
+      .nextElementSibling.children[0].children[1].textContent.replaceAll(
+        "\n",
+        ""
+      )
+      .trim()
+  );
 };
 
 const getLink = () => {
-  return document
-    .getElementsByClassName("jobs-unified-top-card__content--two-pane")[0]
-    .getElementsByTagName("a")[0].href;
+  if (document.URL.includes("view")) return document.URL;
+  else
+    return document
+      .getElementsByClassName("jobs-unified-top-card__content--two-pane")[0]
+      .getElementsByTagName("a")[0].href;
 };
 
 // eslint-disable-next-line no-undef
@@ -28,13 +50,15 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   const url = document.URL;
   console.log(url);
   if (request.data === "getData") {
-    sendResponse({
+    const response = {
       date: new Date().toLocaleString(),
       title: getTitle(),
       company: getCompany(),
       location: getLocation(),
       description: getLink(),
       platform: "Linkedin",
-    });
+    };
+    console.log(response);
+    sendResponse(response);
   }
 });
