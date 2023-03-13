@@ -22,7 +22,7 @@ function App() {
     platform: "",
   });
 
-  const getOtta = async () => {
+  const getData = async () => {
     const [tab] = await chrome.tabs.query({
       active: true,
       lastFocusedWindow: true,
@@ -121,7 +121,7 @@ function App() {
         <p>{data.salary}</p>
         {data.description !== "" && <a href={data.description}>Description</a>}
         <p>{data.platform}</p>
-        <button onClick={getOtta}>Get Data</button>
+        <button onClick={getData}>Get Data</button>
         <button onClick={getProfile}>Get Profile</button>
       </header>
     </div>

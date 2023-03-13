@@ -36,8 +36,11 @@
     },
     {
       "js": ["scripts/otta.js"],
-      "matches": ["https://app.otta.com/jobs*"],
-      "run_at": "document_end"
+      "matches": ["https://app.otta.com/jobs*"]
+    },
+    {
+      "js": ["scripts/yc.js"],
+      "matches": ["https://www.workatastartup.com/jobs/*"]
     },
     {
       "js": ["scripts/linkedin.js"],
