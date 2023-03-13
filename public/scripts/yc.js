@@ -18,6 +18,13 @@ const getLocation = () => {
     .textContent;
 };
 
+const getSalary = () => {
+  return document
+    .getElementsByClassName("company-name")[0]
+    .nextSibling.textContent.replace("•", "")
+    .trim();
+};
+
 const getLink = () => {
   return document.URL;
 };
@@ -31,6 +38,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
       title: getTitle(),
       company: getCompany(),
       location: getLocation(),
+      salary: getSalary(),
       description: getLink(),
       platform: "Work at a Startup",
     });
