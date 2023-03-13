@@ -32,8 +32,13 @@ const getSalary = () => {
 };
 
 const getLink = () => {
-  return document.querySelector('[data-testid="apply-modal-external-button"]')
-    .parentElement.href;
+  if (document.querySelector('[data-testid="apply-modal-external-button"]'))
+    return document.querySelector('[data-testid="apply-modal-external-button"]')
+      .parentElement.href;
+  else
+    return document.getElementsByClassName("sc-fnykZs")[
+      document.getElementsByClassName("sc-fnykZs").length - 1
+    ].children[0].children[0].href;
 };
 
 window.addEventListener(
