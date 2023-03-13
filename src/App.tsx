@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import logo from "./logo.svg";
 import "./App.css";
 
-import { insertRow, insertData, getAuth } from "./lib/sheets";
+import { insertRow, insertData, getAuth, getLinksColumn } from "./lib/sheets";
 import { DataObj } from "./lib/types";
 // import { authorize, appendValues } from "./lib/auth";
 
@@ -81,6 +81,43 @@ function App() {
     console.log(response);
   };
 
+  const updateData = async () => {
+    const [tab] = await chrome.tabs.query({
+      active: true,
+      lastFocusedWindow: true,
+    });
+    console.log("sending message");
+    chrome.runtime.lastError;
+    const response = await chrome.tabs.sendMessage(tab.id!, {
+      data: "getData",
+    });
+    console.log(response);
+    if (response) {
+      setData(response);
+      const values = [
+        [
+          response.date,
+          response.title,
+          response.company,
+          response.location,
+          response.salary,
+          response.description,
+          response.platform,
+        ],
+      ];
+      const token = await getAuth();
+      const { values: linkColumn } = await getLinksColumn(
+        token!,
+        spreadsheetId,
+        sheetTitle
+      );
+      const row = linkColumn[0].indexOf(response.description);
+      console.log(row);
+      const a1Notation = `A${row + 1}:G`;
+      await insertData(token!, spreadsheetId, sheetTitle, values, a1Notation);
+    } else console.error("Couldn't receive response");
+  };
+
   useEffect(() => {
     chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
       setUrl(tab.url!);
@@ -122,6 +159,7 @@ function App() {
         {data.description !== "" && <a href={data.description}>Description</a>}
         <p>{data.platform}</p>
         <button onClick={getData}>Get Data</button>
+        <button onClick={updateData}>Update Data</button>
         <button onClick={getProfile}>Get Profile</button>
       </header>
     </div>

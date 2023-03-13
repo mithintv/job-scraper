@@ -93,7 +93,8 @@ export const insertData = (
   token: string,
   spreadsheetId: string,
   sheetTitle: string,
-  values: number | string[][]
+  values: number | string[][],
+  range: string | undefined = `'${sheetTitle}'!A5:G`
 ) => {
   let init = {
     method: "PUT",
@@ -104,18 +105,46 @@ export const insertData = (
     },
     contentType: "json",
     body: JSON.stringify({
-      range: `'${sheetTitle}'!A5:G`,
+      range,
       majorDimension: "ROWS",
       values,
     }),
   };
   const response = fetch(
-    `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/'${sheetTitle}'!A5:G?valueInputOption=USER_ENTERED`,
+    `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}?valueInputOption=USER_ENTERED`,
     init
   )
     .then((response) => response.json())
     .then(function (data) {
       console.log(data);
+      return data;
+    })
+    .catch((error) => {
+      return error;
+    });
+  return response;
+};
+
+export const getLinksColumn = (
+  token: string,
+  spreadsheetId: string,
+  sheetTitle: string
+) => {
+  let init = {
+    method: "GET",
+    async: true,
+    headers: {
+      Authorization: "Bearer " + token,
+      "Content-Type": "application/json",
+    },
+    contentType: "json",
+  };
+  const response = fetch(
+    `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/'${sheetTitle}'!F:F?majorDimension=COLUMNS`,
+    init
+  )
+    .then((response) => response.json())
+    .then(function (data) {
       return data;
     })
     .catch((error) => {
