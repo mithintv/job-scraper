@@ -111,10 +111,22 @@ function App() {
         spreadsheetId,
         sheetTitle
       );
-      const row = linkColumn[0].indexOf(response.description);
-      console.log(row);
-      const a1Notation = `A${row + 1}:G`;
-      await insertData(token!, spreadsheetId, sheetTitle, values, a1Notation);
+      let row;
+      const checkLink = () => {
+        let index = linkColumn[0].indexOf(response.description);
+        if (index === -1) {
+          index = linkColumn[0].indexOf(
+            response.description.slice(0, response.description.length - 1)
+          );
+        }
+        return index;
+      };
+      row = checkLink();
+      if (row === -1) console.log("Link not found in sheet");
+      else {
+        const a1Notation = `A${row + 1}:G`;
+        await insertData(token!, spreadsheetId, sheetTitle, values, a1Notation);
+      }
     } else console.error("Couldn't receive response");
   };
 
