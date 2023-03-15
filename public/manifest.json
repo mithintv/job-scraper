@@ -43,6 +43,10 @@
       "matches": ["https://www.workatastartup.com/jobs/*"]
     },
     {
+      "js": ["scripts/glassdoor.js"],
+      "matches": ["https://www.glassdoor.com/Job/*"]
+    },
+    {
       "js": ["scripts/linkedin.js"],
       "matches": ["https://www.linkedin.com/jobs/*"]
     },
