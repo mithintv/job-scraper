@@ -17,10 +17,16 @@ const getLocation = () => {
 };
 
 const getSalary = () => {
-  const fullSalary = document
-    .querySelectorAll("article")[1]
-    .querySelector('[data-test="detailSalary"]').textContent;
-  return fullSalary.slice(fullSalary.indexOf(":") + 1).trim();
+  if (
+    document
+      .querySelectorAll("article")[1]
+      .querySelector('[data-test="detailSalary"]')
+  ) {
+    const fullSalary = document
+      .querySelectorAll("article")[1]
+      .querySelector('[data-test="detailSalary"]').textContent;
+    return fullSalary.slice(fullSalary.indexOf(":") + 1).trim();
+  } else return "";
 };
 
 const getLink = () => {
