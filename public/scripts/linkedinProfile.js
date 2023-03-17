@@ -6,20 +6,30 @@ function main() {
   };
   const getRecentPostion = () => {
     if (document.querySelector("section > div#experience")) {
-      const expereinceSection = document.querySelector(
+      const experienceSection = document.querySelector(
         "section > div#experience"
       );
-      const latest = expereinceSection.parentElement.querySelectorAll(
+      const latest = experienceSection.parentElement.querySelectorAll(
         "div > ul > li > div > div"
       )[1];
-      const role =
-        latest.querySelectorAll("div > div > span")[0].children[0].textContent;
-      const companyAndType =
-        latest.querySelectorAll("div > div > span")[1].children[0].textContent;
+
+      let role;
       let company;
-      if (companyAndType.indexOf("·") > -1) {
-        company = companyAndType.slice(0, companyAndType.indexOf("·") - 1);
-      } else company = companyAndType;
+      if (latest.children.length > 1) {
+        company =
+          latest.querySelectorAll("div > span")[0].children[0].textContent;
+        role = latest.querySelectorAll("span.mr1 > span")[2].textContent;
+      } else {
+        role =
+          latest.querySelectorAll("div > div > span")[0].children[0]
+            .textContent;
+        const companyAndType =
+          latest.querySelectorAll("div > div > span")[1].children[0]
+            .textContent;
+        if (companyAndType.indexOf("·") > -1) {
+          company = companyAndType.slice(0, companyAndType.indexOf("·") - 1);
+        } else company = companyAndType;
+      }
       return { role, company };
     } else return "";
   };
