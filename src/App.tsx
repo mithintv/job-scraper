@@ -135,18 +135,53 @@ function App() {
       setUrl(tab.url!);
     });
 
-    chrome.runtime.onMessage.addListener(function (
+    chrome.runtime.onMessage.addListener(async function (
       request,
       sender,
       sendResponse
     ) {
-      console.log(
-        sender.tab
-          ? "from a content script:" + sender.tab.url
-          : "from the extension"
-      );
-      console.log(request);
+      if (request.type === "JOB") {
+        try {
+          await sendResponse("received");
+          setData(request.payload);
+          const values = [
+            [
+              request.payload.date,
+              request.payload.title,
+              request.payload.company,
+              request.payload.location,
+              request.payload.salary,
+              request.payload.description,
+              request.payload.platform,
+            ],
+          ];
+          const token = await getAuth();
+          const { updatedSpreadsheet } = await insertRow(
+            token!,
+            spreadsheetId,
+            sheetId
+          );
+          if (updatedSpreadsheet.spreadsheetId === spreadsheetId) {
+            await insertData(token!, spreadsheetId, sheetTitle, values);
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      }
     });
+
+    // chrome.runtime.onMessage.addListener(function (
+    //   request,
+    //   sender,
+    //   sendResponse
+    // ) {
+    //   console.log(
+    //     sender.tab
+    //       ? "from a content script:" + sender.tab.url
+    //       : "from the extension"
+    //   );
+    //   console.log(request);
+    // });
   });
 
   // useEffect(() => {

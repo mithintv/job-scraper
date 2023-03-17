@@ -45,7 +45,6 @@ const getLink = () => {
       .getElementsByTagName("a")[0].href;
 };
 
-// eslint-disable-next-line no-undef
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   const url = document.URL;
   console.log(url);

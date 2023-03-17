@@ -1,0 +1,8 @@
+#scraper-button {
+  position: absolute;
+  top: 15px;
+  right: 75px;
+  z-index: 2147483649;
+  background: #4caf50; /* Green */
+  border-color: #4caf50;
+}
