@@ -69,7 +69,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   const url = document.URL;
   console.log(url);
   if (request.data === "getData") {
-    console.log(response);
-    sendResponse(response);
+    console.log(jobData);
+    sendResponse(jobData);
   }
 });
