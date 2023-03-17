@@ -1,3 +1,5 @@
+chrome.runtime.sendMessage({ type: "inject_css" });
+
 const getTitle = () => {
   return document.querySelector(".posting-headline > h2").textContent;
 };
@@ -38,15 +40,14 @@ const jobData = {
   platform: "Direct (Lever)",
 };
 
-chrome.runtime.sendMessage({ type: "inject_css" });
-
 const div = document.querySelector(".postings-btn-wrapper");
 const applyButton = document.querySelector(".postings-btn");
+const body = document.querySelector("body");
 const addButton = document.createElement("a");
 addButton.textContent = "Add To Sheets";
 addButton.setAttribute("id", "scraper-button");
 addButton.classList.add("postings-btn", "template-btn-submit");
-div.append(addButton);
+body.append(addButton);
 
 // chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 //   console.log("sent from tab.id=", sender.tab.id);
@@ -58,12 +59,10 @@ div.append(addButton);
 //   })();
 // });
 
-addButton.addEventListener("click", () => {
-  (async () => {
-    const response = await chrome.runtime.sendMessage(jobData);
-    // do something with response here, not outside the function
-    console.log(response);
-  })();
+addButton.addEventListener("click", async () => {
+  fetch("https://jsonplaceholder.typicode.com/todos/1")
+    .then((response) => response.json())
+    .then((json) => console.log(json));
 });
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
