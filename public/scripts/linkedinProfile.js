@@ -16,7 +16,10 @@ function main() {
         latest.querySelectorAll("div > div > span")[0].children[0].textContent;
       const companyAndType =
         latest.querySelectorAll("div > div > span")[1].children[0].textContent;
-      const company = companyAndType.slice(0, companyAndType.indexOf("·") - 1);
+      let company;
+      if (companyAndType.indexOf("·") > -1) {
+        company = companyAndType.slice(0, companyAndType.indexOf("·") - 1);
+      } else company = companyAndType;
       return { role, company };
     } else return "";
   };
