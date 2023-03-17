@@ -1,30 +1,48 @@
-const getRecentPostion = () => {
-  const sectionBlocks = document.querySelectorAll("section");
-  let role = "";
-  sectionBlocks.forEach((section) => {
-    if (section.textContent.includes("Experience")) {
-      role =
-        section.children[2].children[0].children[0].children[0].children[1]
-          .children[0].children[0].children[0].innerText;
-      role = role.slice(0, role.indexOf("\n"));
-      console.log(role);
-      return role;
+window.addEventListener("load", main, false);
+
+function main() {
+  const getName = () => {
+    return document.querySelector("h1").textContent;
+  };
+  const getRecentPostion = () => {
+    if (document.querySelector("section > div#experience")) {
+      const expereinceSection = document.querySelector(
+        "section > div#experience"
+      );
+      const latest = expereinceSection.parentElement.querySelectorAll(
+        "div > ul > li > div > div"
+      )[1];
+      const role =
+        latest.querySelectorAll("div > div > span")[0].children[0].textContent;
+      const company =
+        latest.querySelectorAll("div > div > span")[1].children[0].textContent;
+      return { role, company };
+    } else return "";
+  };
+
+  const getConnectionDegree = () => {
+    return document
+      .querySelector("span.dist-value")
+      .textContent.replaceAll("\n", "")
+      .trim();
+  };
+
+  chrome.runtime.onMessage.addListener(function (
+    request,
+    sender,
+    sendResponse
+  ) {
+    const getProfileData = {
+      date: new Date().toLocaleString(),
+      name: getName(),
+      title: getRecentPostion().role,
+      company: getRecentPostion().company,
+      link: document.URL,
+      connectionDegree: getConnectionDegree(),
+    };
+    console.log(getProfileData);
+    if (request.data === "getProfile") {
+      sendResponse(getProfileData);
     }
   });
-
-  return role;
-};
-
-chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-  const url = document.URL;
-  console.log(url);
-  if (request.data === "getProfile") {
-    console.log({
-      date: new Date().toLocaleString(),
-      link: document.URL,
-      name: document.querySelector("h1").textContent,
-      role: getRecentPostion(),
-    });
-    sendResponse("sent");
-  }
-});
+}
