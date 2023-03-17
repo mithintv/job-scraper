@@ -28,19 +28,48 @@ const getLink = () => {
   return document.URL;
 };
 
+const jobData = {
+  date: new Date().toLocaleString(),
+  title: getTitle(),
+  company: getCompany(),
+  location: getLocation(),
+  salary: getSalary(),
+  description: getLink(),
+  platform: "Direct (Lever)",
+};
+
+chrome.runtime.sendMessage({ type: "inject_css" });
+
+const div = document.querySelector(".postings-btn-wrapper");
+const applyButton = document.querySelector(".postings-btn");
+const addButton = document.createElement("a");
+addButton.textContent = "Add To Sheets";
+addButton.setAttribute("id", "scraper-button");
+addButton.classList.add("postings-btn", "template-btn-submit");
+div.append(addButton);
+
+// chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+//   console.log("sent from tab.id=", sender.tab.id);
+//   (async () => {
+//     await chrome.scripting.insertCSS({
+//       files: ["styles/button.css"],
+//       tabId: sender.tab.id,
+//     });
+//   })();
+// });
+
+addButton.addEventListener("click", () => {
+  (async () => {
+    const response = await chrome.runtime.sendMessage(jobData);
+    // do something with response here, not outside the function
+    console.log(response);
+  })();
+});
+
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   const url = document.URL;
   console.log(url);
   if (request.data === "getData") {
-    const response = {
-      date: new Date().toLocaleString(),
-      title: getTitle(),
-      company: getCompany(),
-      location: getLocation(),
-      salary: getSalary(),
-      description: getLink(),
-      platform: "Direct (Lever)",
-    };
     console.log(response);
     sendResponse(response);
   }

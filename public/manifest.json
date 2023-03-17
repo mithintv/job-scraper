@@ -14,7 +14,14 @@
     "48": "images/icon-48.png",
     "128": "images/icon-128.png"
   },
-  "permissions": ["identity", "activeTab", "scripting"],
+  "permissions": [
+    "identity",
+    "activeTab",
+    "scripting",
+    "webRequest",
+    "webRequestBlocking"
+  ],
+  "host_permissions": ["https://jobs.lever.co/*"],
   "action": {
     "default_popup": "index.html",
     "default_title": "App Tracker",
@@ -24,6 +31,9 @@
       "48": "images/icon-48.png",
       "128": "images/icon-128.png"
     }
+  },
+  "background": {
+    "service_worker": "scripts/background.js"
   },
   "content_scripts": [
     {
@@ -55,8 +65,10 @@
       "matches": ["https://www.linkedin.com/in/*"]
     },
     {
+      "css": ["styles/button.css"],
       "js": ["scripts/lever.js"],
-      "matches": ["https://jobs.lever.co/*"]
+      "matches": ["https://jobs.lever.co/*"],
+      "match_origin_as_fallback": true
     }
   ]
 }
