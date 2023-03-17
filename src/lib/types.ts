@@ -7,3 +7,12 @@ export type DataObj = {
   description: string;
   platform: string;
 };
+
+export type ProfileObj = {
+  date: string;
+  name: string;
+  title: string;
+  company: string;
+  link: string;
+  connectionDegree: string;
+};

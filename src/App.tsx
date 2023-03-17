@@ -3,12 +3,14 @@ import logo from "./logo.svg";
 import "./App.css";
 
 import { insertRow, insertData, getAuth, getLinksColumn } from "./lib/sheets";
-import { DataObj } from "./lib/types";
+import { DataObj, ProfileObj } from "./lib/types";
 // import { authorize, appendValues } from "./lib/auth";
 
 const spreadsheetId = process.env.REACT_APP_SPREADSHEET_ID!;
 const sheetId = parseInt(process.env.REACT_APP_SHEET_ID!);
+const networkSheetId = parseInt(process.env.REACT_APP_NETWORK_SHEET_ID!);
 const sheetTitle = process.env.REACT_APP_SPREADSHEET_NAME!;
+const networkSheetTitle = process.env.REACT_APP_NETWORK_SPREADSHEET_NAME!;
 
 function App() {
   const [url, setUrl] = useState<string>("");
@@ -20,6 +22,14 @@ function App() {
     salary: "",
     description: "",
     platform: "",
+  });
+  const [profileData, setProfileData] = useState<ProfileObj>({
+    date: "string",
+    name: "string",
+    title: "string",
+    company: "string",
+    link: "string",
+    connectionDegree: "string",
   });
 
   const getData = async () => {
@@ -51,7 +61,9 @@ function App() {
       const { updatedSpreadsheet } = await insertRow(
         token!,
         spreadsheetId,
-        sheetId
+        sheetId,
+        4,
+        5
       );
       if (updatedSpreadsheet.spreadsheetId === spreadsheetId) {
         await insertData(token!, spreadsheetId, sheetTitle, values);
@@ -59,13 +71,6 @@ function App() {
     } else {
       console.log("Something went wrong");
     }
-
-    // save data
-    // authorize()
-    //   .then((auth) => appendValues(auth, response))
-    //   .catch(console.error);
-
-    // // do something with response here, not outside the function
   };
 
   const getProfile = async () => {
@@ -78,7 +83,40 @@ function App() {
     const response = await chrome.tabs.sendMessage(tab.id!, {
       data: "getProfile",
     });
-    console.log(response);
+
+    try {
+      setData(response);
+      console.log(response);
+      const values = [
+        [
+          response.date,
+          response.name,
+          response.company,
+          response.title,
+          response.link,
+          response.connectionDegree,
+        ],
+      ];
+      const token = await getAuth();
+      const { updatedSpreadsheet } = await insertRow(
+        token!,
+        spreadsheetId,
+        networkSheetId,
+        1,
+        2
+      );
+      if (updatedSpreadsheet.spreadsheetId === spreadsheetId) {
+        await insertData(
+          token!,
+          spreadsheetId,
+          networkSheetTitle,
+          values,
+          `'${networkSheetTitle}'!A2:F`
+        );
+      }
+    } catch (error) {
+      console.log("Something went wrong: ", error);
+    }
   };
 
   const updateData = async () => {
@@ -142,7 +180,7 @@ function App() {
     ) {
       if (request.type === "JOB") {
         try {
-          await sendResponse("received");
+          sendResponse("received");
           setData(request.payload);
           const values = [
             [
@@ -159,10 +197,41 @@ function App() {
           const { updatedSpreadsheet } = await insertRow(
             token!,
             spreadsheetId,
-            sheetId
+            sheetId,
+            4,
+            5
           );
           if (updatedSpreadsheet.spreadsheetId === spreadsheetId) {
             await insertData(token!, spreadsheetId, sheetTitle, values);
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      }
+      if (request.type === "PROFILE") {
+        try {
+          sendResponse("received");
+          setData(request.payload);
+          const values = [
+            [
+              request.payload.date,
+              request.payload.name,
+              request.payload.title,
+              request.payload.company,
+              request.payload.link,
+              request.payload.connectionDegree,
+            ],
+          ];
+          const token = await getAuth();
+          const { updatedSpreadsheet } = await insertRow(
+            token!,
+            spreadsheetId,
+            networkSheetId,
+            1,
+            2
+          );
+          if (updatedSpreadsheet.spreadsheetId === spreadsheetId) {
+            await insertData(token!, spreadsheetId, networkSheetTitle, values);
           }
         } catch (error) {
           console.log(error);

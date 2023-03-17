@@ -48,7 +48,9 @@ export const getSheet = async (token: string, spreadsheetId: string) => {
 export const insertRow = async (
   token: string,
   spreadsheetId: string,
-  sheetId: number
+  sheetId: number,
+  startIndex: number,
+  endIndex: number
 ) => {
   let init = {
     method: "POST",
@@ -65,8 +67,8 @@ export const insertRow = async (
             range: {
               sheetId: sheetId,
               dimension: "ROWS",
-              startIndex: 4,
-              endIndex: 5,
+              startIndex,
+              endIndex,
             },
           },
         },
