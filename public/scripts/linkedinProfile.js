@@ -14,8 +14,9 @@ function main() {
       )[1];
       const role =
         latest.querySelectorAll("div > div > span")[0].children[0].textContent;
-      const company =
+      const companyAndType =
         latest.querySelectorAll("div > div > span")[1].children[0].textContent;
+      const company = companyAndType.slice(0, companyAndType.indexOf("·") - 1);
       return { role, company };
     } else return "";
   };
