@@ -16,10 +16,7 @@ function main() {
 
         let role;
         let company;
-        if (
-          latest.children.length > 1 &&
-          latest.querySelectorAll("ul.pvs-list").length === 1
-        ) {
+        if (latest.querySelectorAll("span.pvs-entity__path-node").length > 0) {
           company =
             latest.querySelectorAll("div > span")[0].children[0].textContent;
           role = latest.querySelectorAll("span.mr1 > span")[2].textContent;
