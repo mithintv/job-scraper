@@ -37,6 +37,12 @@ const getLocation = () => {
   );
 };
 
+const getSalary = () => {
+  const salaryBlock = document.querySelector("a[href='#SALARY']");
+  if (salaryBlock) return salaryBlock.textContent;
+  else return "";
+};
+
 const getLink = () => {
   if (document.URL.includes("view")) return document.URL;
   else
@@ -54,6 +60,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
       title: getTitle(),
       company: getCompany(),
       location: getLocation(),
+      salary: getSalary(),
       description: getLink(),
       platform: "Linkedin",
     };
